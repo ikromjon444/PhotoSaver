@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Saver</title>
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="navbar">
+     <button class="active">Gallery</button>
+      <button id="logout">Chiqish</button>
+</div>
+
+    <h1>Rasimlar</h1>
+<div class="upload-box">
+  <input type="file" id="imageInput" accept="image/*">
+  <label for="imageInput" id="dropZone">
+    <i class="fa fa-cloud-upload-alt"></i>
+    <span id="dropText">Rasim Qo'ying</span>
+  </label>
+  <button id="uploadBtn">Yuklash</button>
+</div>
+<div class="chiziq"></div>
+<h1 class="title">Rasimlarim</h1>
+
+    <div id="gallery" class="gallery"></div>
+  </main>
+
+</div>
+
+<!-- MODAL -->
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <span id="close">&times;</span>
+  <img id="modalImg">
+  <div class="modal-actions">
+    <button id="downloadBtn">Download</button>
+    <button id="deleteBtn">Delete Photo</button>
+  </div>
+</div>
+
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) location.href = "index.html";
+
+const API = "https://photosaver-backend.onrender.com/";
+const gallery = document.getElementById("gallery");
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const close = document.getElementById("close");
+const deleteBtn = document.getElementById("deleteBtn");
+
+let currentImageId = null;
+
+/* 1️⃣ LOAD USER IMAGES */
+async function loadImages() {
+  try {
+    const res = await fetch(`${API}/api/images`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const images = await res.json();
+
+    gallery.innerHTML = "";
+
+    images.forEach(img => {
+      const box = document.createElement("div");
+      box.className = "img-box";
+
+      const image = document.createElement("img");
+      image.src = `${API}/uploads/${img.filename}`;
+      image.alt = "User Image";
+
+      // Modal ochish
+      image.onclick = () => openModal(img.id, image.src);
+
+      box.appendChild(image);
+      gallery.appendChild(box);
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert("Rasm yuklashda xatolik");
+  }
+}
+loadImages();
+const downloadBtn = document.getElementById("downloadBtn");
+const modalImgq = document.getElementById("modalImg");
+downloadBtn.onclick = async () => {
+  if (!modalImgq.src) return;
+
+  try {
+    const res = await fetch(modalImgq.src, {
+      headers: { Authorization: "Bearer " + token } // Agar kerak bo‘lsa
+    });
+    const blob = await res.blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = modalImgq.src.split("/").pop();
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  } catch (err) {
+    console.error(err);
+    alert("Download xatolik yuz berdi");
+  }
+};
+
+
+/* 2️⃣ UPLOAD IMAGE */
+document.getElementById("uploadBtn").onclick = async () => {
+  const fileInput = document.getElementById("imageInput");
+  const file = fileInput.files[0];
+  if (!file) return alert("Rasm tanlang");
+
+  const fd = new FormData();
+  fd.append("image", file);
+
+  try {
+    const res = await fetch(`${API}/api/images/upload`, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token },
+      body: fd
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Xatolik");
+      return;
+    }
+
+    fileInput.value = "";   // <<< INPUTNI TOZALASH
+    loadImages();           // gallery yangilanadi
+
+  } catch (err) {
+    console.error(err);
+    alert("Server bilan aloqa yo‘q");
+  }
+};
+
+
+/* 3️⃣ MODAL OPEN / CLOSE */
+function openModal(id, src) {
+  currentImageId = id;
+  modal.style.display = "flex";
+  modalImg.src = src;
+}
+close.onclick = () => modal.style.display = "none";
+
+/* 4️⃣ DELETE IMAGE */
+deleteBtn.onclick = async () => {
+  if (!currentImageId) return alert("Rasm tanlanmagan");
+
+  if (!confirm("Rasm o‘chirilsinmi?")) return;
+
+  try {
+    const res = await fetch(`${API}/api/images/${currentImageId}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Xatolik");
+      return;
+    }
+
+    modal.style.display = "none";
+    loadImages();  // gallery yangilanadi
+
+  } catch (err) {
+    console.error(err);
+    alert("Server bilan aloqa yo‘q");
+  }
+};
+const dropZone = document.getElementById("dropZone");
+const imageInput = document.getElementById("imageInput");
+const dropText = document.getElementById("dropText");
+
+// Drag over
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("hover");
+});
+
+// Drag leave
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("hover");
+});
+
+// Drop
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("hover");
+
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    imageInput.files = files; // Set the input files
+    dropText.textContent = files[0].name; // Show file name
+  }
+});
+
+// Input change
+imageInput.addEventListener("change", () => {
+  if (imageInput.files.length > 0) {
+    dropText.textContent = imageInput.files[0].name;
+  } else {
+    dropText.textContent = "Tanlang yoki surib tashlang";
+  }
+});
+
+/* 5️⃣ LOGOUT */
+document.getElementById("logout").onclick = () => {
+  localStorage.removeItem("token");
+  location.href = "index.html";
+};
+</script>
+
+</body>
+
+</html>

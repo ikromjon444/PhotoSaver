@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Saver | Ro'yxatdan o'tish</title>
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  transition: all 0.3s ease;
+}
+
+body {
+  background: #f5f7ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 400px; 
+  padding: 20px;
+}
+
+
+.card {
+  background: linear-gradient(135deg, #667eea, #764ba2); 
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  color: #fff;
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+
+.card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card input {
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+}
+
+.card input::placeholder {
+  color: #999;
+}
+
+.card button {
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background: #34d399; 
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(52,211,153,0.3);
+}
+
+.card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(52,211,153,0.4);
+}
+
+
+#toggle {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #fff;
+}
+
+#toggle span {
+  color: #ffbb00;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#toggle span:hover {
+  text-decoration: underline;
+}
+
+
+.message {
+  text-align: center;
+  margin-top: 10px;
+  color: #ff5c5c;
+  font-weight: 500;
+}
+
+
+@media (max-width: 480px) {
+  .card {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .card h2 {
+    font-size: 24px;
+  }
+
+  .card input, .card button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="card">
+      <h2 id="form-title">Login</h2>
+
+      <form id="authForm">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+
+      <p id="toggle">
+        Akkount yo‘qmi?
+        <span id="switch">Register</span>
+      </p>
+
+      <p class="message" id="message"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

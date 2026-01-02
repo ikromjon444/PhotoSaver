@@ -1,0 +1,294 @@
+/* =======================
+   GLOBAL
+======================= */
+* {
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7ff;
+  color: #333;
+}
+
+/* =======================
+   LAYOUT
+======================= */
+.layout {
+  display: flex;
+  flex-direction: column; /* mobil uchun ustun tartib */
+  height: 100vh;
+}
+
+/* =======================
+   SIDEBAR
+======================= */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #1e1e2f, #2a2a42);
+  color: #fff;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 28px;
+  margin-bottom: 50px;
+  letter-spacing: 1px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 14px 20px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #2e2e42;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.sidebar button:hover,
+.sidebar .active {
+  background: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* =======================
+   CONTENT
+======================= */
+.content {
+  flex: 1;
+  padding: 15px; /* mobil uchun moslashtirish */
+  overflow-y: auto;
+}
+
+.content h1 {
+  margin-bottom: 30px;
+  font-size: 32px;
+  color: #1f2937;
+}
+
+/* =======================
+   UPLOAD BOX
+======================= */
+.upload-box {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+/* Hide default input */
+.upload-box input[type="file"] {
+  display: none;
+}
+
+/* Drop zone / label */
+#dropZone {
+  flex: 1;
+  padding: 25px;
+  background: #f0f3ff;
+  border: 2px dashed #667eea;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #667eea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+#dropZone.hover {
+  background: #e3e8ff;
+  border-color: #5648d4;
+  transform: translateY(-2px);
+}
+
+/* Icon */
+#dropZone i {
+  font-size: 32px;
+  color: #667eea;
+}
+
+/* Upload button */
+.upload-box button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.upload-box button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* =======================
+   GALLERY
+======================= */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.img-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.img-box img {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.img-box img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* =======================
+   MODAL
+======================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999;
+  padding: 20px;
+}
+
+.modal img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+#close {
+  color: white;
+  font-size: 36px;
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#close:hover {
+  color: #ff5c5c;
+}
+
+#deleteBtn {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(220,20,60,0.3);
+}
+
+#deleteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(220,20,60,0.4);
+}
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+#downloadBtn {
+  padding: 12px 25px;
+  background: #34d399; /* yashil rang */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(52,211,153,0.3);
+  transition: all 0.3s ease;
+}
+#downloadBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(52,211,153,0.4);
+}
+#deleteBtn {
+  background: crimson;
+}
+.navbar{
+    width: 98%;
+    height: 70px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 25px;
+    display: flex;
+    font-size: 14px; /* button va h2 ni moslashtirish */
+    position: fixed;
+    z-index: 999;
+    padding: 15px 25px;
+}
+#logout{
+  padding: 12px 25px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(220,20,60,0.3);
+}
+.active{
+  padding: 12px 25px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.chiziq{
+    width: 100%;
+    height: 1px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+.title{
+    text-align: center;
+}
+@media (max-width: 750px) {
+    .navbar{
+        width: 92.5%;
+    }
+}
