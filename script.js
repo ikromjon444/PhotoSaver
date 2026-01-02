@@ -4,7 +4,7 @@ const switchBtn = document.getElementById("switch");
 const message = document.getElementById("message");
 
 let isLogin = true;
-const API_URL = "https://photosaver-backend.onrender.com//api/auth";
+const API_URL = "https://photosaver-backend.onrender.com/api/auth";
 
 switchBtn.addEventListener("click", () => {
   isLogin = !isLogin;
